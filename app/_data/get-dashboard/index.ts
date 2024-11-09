@@ -2,6 +2,7 @@ import { db } from "@/app/_lib/prisma";
 import { TransactionType } from "@prisma/client";
 import { TotalExpensePerCategory, TransactionPercentagePerType } from "./types";
 import { auth } from "@clerk/nextjs/server";
+import { sanitazeData } from "@/app/_utils/sanitaze-data";
 
 export const getDashboard = async (month: string) => {
   const { userId } = await auth();
@@ -81,11 +82,13 @@ export const getDashboard = async (month: string) => {
     ),
   }));
 
-  const lastTransactions = await db.transaction.findMany({
-    where,
-    orderBy: { date: "desc" },
-    take: 10,
-  });
+  const lastTransactions = sanitazeData(
+    await db.transaction.findMany({
+      where,
+      orderBy: { date: "desc" },
+      take: 10,
+    }),
+  );
 
   return {
     balance,

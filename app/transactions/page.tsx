@@ -6,6 +6,7 @@ import NavBar from "../_components/navbar";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ScrollArea } from "../_components/ui/scroll-area";
+import { sanitazeData } from "../_utils/sanitaze-data";
 
 const TransactionsPage = async () => {
   const { userId } = await auth();
@@ -26,7 +27,7 @@ const TransactionsPage = async () => {
         <ScrollArea>
           <DataTable
             columns={transactionColumns}
-            data={JSON.parse(JSON.stringify(transactions))}
+            data={sanitazeData(transactions)}
           />
         </ScrollArea>
       </div>
